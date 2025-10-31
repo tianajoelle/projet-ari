@@ -1,73 +1,92 @@
-import React, { useState } from 'react';
-import { Card, CardContent, Typography, Box } from '@mui/material';
-import TaskMenu from './TaskMenu';
-import TaskEditForm from './TaskEditForm';
-import ChangeStatusDialog from './ChangeStatusDialog';
+import { useState } from 'react';
+import { Paper, Typography, Button, Box, Chip } from '@mui/material';
+import TaskForm from './TaskForm';
+import TaskCard from './TaskCard';
 
-export default function TaskCard({ task, onUpdate, onDelete, columns=[] }) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [openDialog, setOpenDialog] = useState(false);
+export default function KanbanList({ 
+  title, 
+  tasks = [], 
+  columns = [], 
+  onAddTask, 
+  onUpdateTask, 
+  onDeleteTask 
+}) {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const handleAddTask = (task) => {
+    const newTask = {
+      titre: task.titre,
+      description: task.description,
+      statut: title,
+      dateCreation: new Date().toLocaleDateString('fr-FR'),
+    };
+    onAddTask(newTask);
+    setIsFormOpen(false);
+  };
 
   return (
-    <Card
-      variant="outlined"
+    <Paper
+      elevation={2}
       sx={{
-        mb: 1,
-        backgroundColor: '#fff',
+        minWidth: 320,
+        width: 320,
+        p: 2,
+        backgroundColor: '#f4f5f7',
         borderRadius: 2,
+        display: 'flex',
+        flexDirection: 'column',
+        maxHeight: 'calc(100vh - 200px)',
       }}
     >
-      <CardContent sx={{ pb: '16px !important' }}>
-        {!isEditing ? (
-          <>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'flex-start',
-              }}
-            >
-              <Typography variant="subtitle1" fontWeight="bold">
-                {task.titre}
-              </Typography>
-              <TaskMenu
-                onEdit={() => setIsEditing(true)}
-                onDelete={() => onDelete(task)}
-                onChangeStatus={() => setOpenDialog(true)}
-              />
-              <ChangeStatusDialog
-                open={openDialog}
-                onClose={() => setOpenDialog(false)}
-                currentStatus={task.statut}
-                columns={columns}
-                onChangeStatus={(newStatus) => {
-                onUpdate({ ...task, statut: newStatus });
-                setOpenDialog(false);
-                }}
-            />
-            </Box>
+      {/* En-tête de la liste */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="h6" fontWeight="600">
+          {title}
+        </Typography>
+        <Chip 
+          label={tasks.length} 
+          size="small" 
+          color="primary" 
+          variant="outlined"
+        />
+      </Box>
 
-            <Typography variant="body2" sx={{ mt: 1 }}>
-              {task.description}
-            </Typography>
-            <Typography
-              variant="caption"
-              sx={{ color: 'text.secondary', display: 'block', mt: 1 }}
-            >
-              Créée le {task.dateCreation}
-            </Typography>
-          </>
-        ) : (
-          <TaskEditForm
+      {/* Liste des tâches avec scroll */}
+      <Box sx={{ flex: 1, overflowY: 'auto', mb: 2 }}>
+        {tasks.map((task) => (
+          <TaskCard
+            key={task.id}
             task={task}
-            onCancel={() => setIsEditing(false)}
-            onSave={(updatedTask) => {
-              onUpdate(updatedTask);
-              setIsEditing(false);
-            }}
+            onUpdate={onUpdateTask}
+            onDelete={() => onDeleteTask(task.id)}
+            columns={columns}
           />
+        ))}
+
+        {/* Formulaire uniquement pour "À faire" */}
+        {title === 'À faire' && isFormOpen && (
+          <Box sx={{ mt: 1 }}>
+            <TaskForm
+              statut={title}
+              onCancel={() => setIsFormOpen(false)}
+              onValidate={handleAddTask}
+            />
+          </Box>
         )}
-      </CardContent>
-    </Card>
+      </Box>
+
+      {/* Bouton ajouter (uniquement pour "À faire") */}
+      {title === 'À faire' && !isFormOpen && (
+        <Button
+          variant="contained"
+          size="small"
+          fullWidth
+          onClick={() => setIsFormOpen(true)}
+          sx={{ mt: 'auto' }}
+        >
+          + Ajouter une tâche
+        </Button>
+      )}
+    </Paper>
   );
 }

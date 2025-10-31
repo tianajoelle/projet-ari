@@ -1,35 +1,21 @@
 import { useState } from 'react';
-import { Box, TextField, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Box, TextField, Typography, Button, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import KanbanList from '../components/KanbanList';
 
-export default function BoardPage() {
+export default function BoardPage({ tasks, columns, onAddTask, onUpdateTask, onDeleteTask }) {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
-  const [tasks, setTasks] = useState([]);
-
-  // Colonnes du Kanban
-  const columns = ['À faire', 'En cours', 'Terminé'];
-
-  // Fonctions de gestion des tâches
-  const handleAddTask = (newTask) => {
-    setTasks((prev) => [...prev, { ...newTask, id: Date.now() }]);
-  };
-
-  const handleUpdateTask = (updatedTask) => {
-    setTasks((prev) =>
-      prev.map((task) => (task.id === updatedTask.id ? updatedTask : task))
-    );
-  };
-
-  const handleDeleteTask = (taskId) => {
-    setTasks((prev) => prev.filter((task) => task.id !== taskId));
-  };
+  const [filterStatus, setFilterStatus] = useState('all');
 
   // Filtrage des tâches
   const filteredTasks = tasks.filter((task) => {
     const matchesSearch = 
       task.titre.toLowerCase().includes(searchTerm.toLowerCase()) ||
       task.description.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesSearch;
+    const matchesStatus = filterStatus === 'all' || task.statut === filterStatus;
+    return matchesSearch && matchesStatus;
   });
 
   // Regrouper les tâches par statut
@@ -39,18 +25,41 @@ export default function BoardPage() {
 
   return (
     <Box sx={{ width: '100%' }}>
-      {/* Barre de recherche */}
-      <Box sx={{ mb: 3, display: 'flex', gap: 2, alignItems: 'center' }}>
+      {/* Barre de recherche et filtres */}
+      <Box sx={{ mb: 3, display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
         <TextField
           label="Rechercher une tâche..."
           variant="outlined"
           size="small"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          sx={{ flexGrow: 1, maxWidth: 400, backgroundColor: '#fff' }}
+          sx={{ flexGrow: 1, minWidth: 250, maxWidth: 400, backgroundColor: '#fff' }}
         />
-        <Typography variant="body2" color="text.secondary">
-          {tasks.length} tâche(s) au total
+        
+        <FormControl size="small" sx={{ minWidth: 150, backgroundColor: '#fff' }}>
+          <InputLabel>Filtrer par statut</InputLabel>
+          <Select
+            value={filterStatus}
+            label="Filtrer par statut"
+            onChange={(e) => setFilterStatus(e.target.value)}
+          >
+            <MenuItem value="all">Tous</MenuItem>
+            {columns.map(col => (
+              <MenuItem key={col} value={col}>{col}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => navigate('/new')}
+        >
+          Nouvelle tâche
+        </Button>
+
+        <Typography variant="body2" color="text.secondary" sx={{ ml: 'auto' }}>
+          {filteredTasks.length} / {tasks.length} tâche(s)
         </Typography>
       </Box>
 
@@ -70,9 +79,9 @@ export default function BoardPage() {
             title={column}
             tasks={getTasksByStatus(column)}
             columns={columns}
-            onAddTask={handleAddTask}
-            onUpdateTask={handleUpdateTask}
-            onDeleteTask={handleDeleteTask}
+            onAddTask={onAddTask}
+            onUpdateTask={onUpdateTask}
+            onDeleteTask={onDeleteTask}
           />
         ))}
       </Box>
