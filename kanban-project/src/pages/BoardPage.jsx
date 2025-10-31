@@ -4,7 +4,7 @@ import { Box, TextField, Typography, Button, MenuItem, Select, FormControl, Inpu
 import AddIcon from '@mui/icons-material/Add';
 import KanbanList from '../components/KanbanList';
 
-export default function BoardPage({ tasks, columns, onAddTask, onUpdateTask, onDeleteTask }) {
+export default function BoardPage({ tasks, columns, onUpdateTask, onDeleteTask }) {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
@@ -79,7 +79,6 @@ export default function BoardPage({ tasks, columns, onAddTask, onUpdateTask, onD
             title={column}
             tasks={getTasksByStatus(column)}
             columns={columns}
-            onAddTask={onAddTask}
             onUpdateTask={onUpdateTask}
             onDeleteTask={onDeleteTask}
           />

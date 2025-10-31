@@ -1,29 +1,13 @@
-import { useState } from 'react';
-import { Paper, Typography, Button, Box, Chip } from '@mui/material';
-import TaskForm from './TaskForm';
+import { Paper, Typography, Box, Chip } from '@mui/material';
 import TaskCard from './TaskCard';
 
 export default function KanbanList({ 
   title, 
   tasks = [], 
   columns = [], 
-  onAddTask, 
   onUpdateTask, 
   onDeleteTask 
 }) {
-  const [isFormOpen, setIsFormOpen] = useState(false);
-
-  const handleAddTask = (task) => {
-    const newTask = {
-      titre: task.titre,
-      description: task.description,
-      statut: title,
-      dateCreation: new Date().toLocaleDateString('fr-FR'),
-    };
-    onAddTask(newTask);
-    setIsFormOpen(false);
-  };
-
   return (
     <Paper
       elevation={2}
@@ -53,40 +37,22 @@ export default function KanbanList({
 
       {/* Liste des tâches avec scroll */}
       <Box sx={{ flex: 1, overflowY: 'auto', mb: 2 }}>
-        {tasks.map((task) => (
-          <TaskCard
-            key={task.id}
-            task={task}
-            onUpdate={onUpdateTask}
-            onDelete={() => onDeleteTask(task.id)}
-            columns={columns}
-          />
-        ))}
-
-        {/* Formulaire uniquement pour "À faire" */}
-        {title === 'À faire' && isFormOpen && (
-          <Box sx={{ mt: 1 }}>
-            <TaskForm
-              statut={title}
-              onCancel={() => setIsFormOpen(false)}
-              onValidate={handleAddTask}
+        {tasks.length === 0 ? (
+          <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
+            Aucune tâche
+          </Typography>
+        ) : (
+          tasks.map((task) => (
+            <TaskCard
+              key={task.id}
+              task={task}
+              onUpdate={onUpdateTask}
+              onDelete={() => onDeleteTask(task.id)}
+              columns={columns}
             />
-          </Box>
+          ))
         )}
       </Box>
-
-      {/* Bouton ajouter (uniquement pour "À faire") */}
-      {title === 'À faire' && !isFormOpen && (
-        <Button
-          variant="contained"
-          size="small"
-          fullWidth
-          onClick={() => setIsFormOpen(true)}
-          sx={{ mt: 'auto' }}
-        >
-          + Ajouter une tâche
-        </Button>
-      )}
     </Paper>
   );
 }

@@ -36,7 +36,6 @@ export default function App() {
               <BoardPage 
                 tasks={tasks}
                 columns={columns}
-                onAddTask={handleAddTask}
                 onUpdateTask={handleUpdateTask}
                 onDeleteTask={handleDeleteTask}
               />

@@ -1,92 +1,113 @@
 import { useState } from 'react';
-import { Paper, Typography, Button, Box, Chip } from '@mui/material';
-import TaskForm from './TaskForm';
-import TaskCard from './TaskCard';
+import { useNavigate } from 'react-router-dom';
+import { Card, CardContent, Typography, Box, IconButton, Tooltip } from '@mui/material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import ChangeStatusDialog from './ChangeStatusDialog';
 
-export default function KanbanList({ 
-  title, 
-  tasks = [], 
-  columns = [], 
-  onAddTask, 
-  onUpdateTask, 
-  onDeleteTask 
-}) {
-  const [isFormOpen, setIsFormOpen] = useState(false);
+export default function TaskCard({ task, onUpdate, onDelete, columns = [] }) {
+  const navigate = useNavigate();
+  const [openDialog, setOpenDialog] = useState(false);
 
-  const handleAddTask = (task) => {
-    const newTask = {
-      titre: task.titre,
-      description: task.description,
-      statut: title,
-      dateCreation: new Date().toLocaleDateString('fr-FR'),
-    };
-    onAddTask(newTask);
-    setIsFormOpen(false);
+  const handleDelete = () => {
+    if (window.confirm(`Supprimer la tâche "${task.titre}" ?`)) {
+      onDelete();
+    }
   };
 
   return (
-    <Paper
-      elevation={2}
+    <Card
+      variant="outlined"
       sx={{
-        minWidth: 320,
-        width: 320,
-        p: 2,
-        backgroundColor: '#f4f5f7',
+        mb: 1,
+        backgroundColor: '#fff',
         borderRadius: 2,
-        display: 'flex',
-        flexDirection: 'column',
-        maxHeight: 'calc(100vh - 200px)',
+        transition: 'box-shadow 0.2s',
+        '&:hover': {
+          boxShadow: 2,
+        },
       }}
     >
-      {/* En-tête de la liste */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="h6" fontWeight="600">
-          {title}
-        </Typography>
-        <Chip 
-          label={tasks.length} 
-          size="small" 
-          color="primary" 
-          variant="outlined"
-        />
-      </Box>
-
-      {/* Liste des tâches avec scroll */}
-      <Box sx={{ flex: 1, overflowY: 'auto', mb: 2 }}>
-        {tasks.map((task) => (
-          <TaskCard
-            key={task.id}
-            task={task}
-            onUpdate={onUpdateTask}
-            onDelete={() => onDeleteTask(task.id)}
-            columns={columns}
-          />
-        ))}
-
-        {/* Formulaire uniquement pour "À faire" */}
-        {title === 'À faire' && isFormOpen && (
-          <Box sx={{ mt: 1 }}>
-            <TaskForm
-              statut={title}
-              onCancel={() => setIsFormOpen(false)}
-              onValidate={handleAddTask}
-            />
-          </Box>
-        )}
-      </Box>
-
-      {/* Bouton ajouter (uniquement pour "À faire") */}
-      {title === 'À faire' && !isFormOpen && (
-        <Button
-          variant="contained"
-          size="small"
-          fullWidth
-          onClick={() => setIsFormOpen(true)}
-          sx={{ mt: 'auto' }}
+      <CardContent sx={{ pb: '16px !important' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            gap: 1,
+          }}
         >
-          + Ajouter une tâche
-        </Button>
-      )}
-    </Paper>
+          <Typography variant="subtitle1" fontWeight="bold" sx={{ flex: 1 }}>
+            {task.titre}
+          </Typography>
+          
+          <Box sx={{ display: 'flex', gap: 0.5 }}>
+            <Tooltip title="Voir les détails">
+              <IconButton 
+                size="small" 
+                onClick={() => navigate(`/task/${task.id}`)}
+                color="primary"
+              >
+                <VisibilityIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+            
+            <Tooltip title="Changer de statut">
+              <IconButton 
+                size="small" 
+                onClick={() => setOpenDialog(true)}
+                color="info"
+              >
+                <SwapHorizIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+            
+            <Tooltip title="Supprimer">
+              <IconButton 
+                size="small" 
+                onClick={handleDelete}
+                color="error"
+              >
+                <DeleteIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
+
+        <Typography 
+          variant="body2" 
+          sx={{ 
+            mt: 1, 
+            color: 'text.secondary',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+          }}
+        >
+          {task.description || 'Aucune description'}
+        </Typography>
+        
+        <Typography
+          variant="caption"
+          sx={{ color: 'text.secondary', display: 'block', mt: 1 }}
+        >
+          Créée le {task.dateCreation}
+        </Typography>
+
+        <ChangeStatusDialog
+          open={openDialog}
+          onClose={() => setOpenDialog(false)}
+          currentStatus={task.statut}
+          columns={columns}
+          onChangeStatus={(newStatus) => {
+            onUpdate({ ...task, statut: newStatus });
+            setOpenDialog(false);
+          }}
+        />
+      </CardContent>
+    </Card>
   );
 }
