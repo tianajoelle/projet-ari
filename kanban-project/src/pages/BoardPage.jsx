@@ -1,27 +1,21 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, TextField, Typography, Button, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import KanbanList from '../components/KanbanList';
+import { useTaskFilters } from '../hooks/useTaskFilters';
 
 export default function BoardPage({ tasks, columns, onUpdateTask, onDeleteTask }) {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all');
-
-  // Filtrage des tâches
-  const filteredTasks = tasks.filter((task) => {
-    const matchesSearch = 
-      task.titre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      task.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = filterStatus === 'all' || task.statut === filterStatus;
-    return matchesSearch && matchesStatus;
-  });
-
-  // Regrouper les tâches par statut
-  const getTasksByStatus = (status) => {
-    return filteredTasks.filter((task) => task.statut === status);
-  };
+  
+  // Utilisation du hook de filtrage
+  const {
+    searchTerm,
+    setSearchTerm,
+    filterStatus,
+    setFilterStatus,
+    filteredTasks,
+    getTasksByStatus,
+  } = useTaskFilters(tasks);
 
   return (
     <Box sx={{ width: '100%' }}>

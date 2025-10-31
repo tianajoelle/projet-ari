@@ -1,87 +1,81 @@
-import { useState, useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { CircularProgress, Box } from '@mui/material';
+import { CircularProgress, Box, Typography } from '@mui/material';
 import Layout from './components/Layout';
 import BoardPage from './pages/BoardPage';
 import TaskDetailPage from './pages/TaskDetailPage';
 import TaskEditPage from './pages/TaskEditPage';
 import TaskNewPage from './pages/TaskNewPage';
 import NotFound from './pages/NotFound';
-import { getTasks, createTask, updateTask, deleteTask } from './services/api';
+import { useTasks } from './hooks/useTasks';
 
 export default function App() {
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const columns = ['À faire', 'En cours', 'Terminé'];
+  
+  // Utilisation du hook personnalisé
+  const {
+    tasks,
+    loading,
+    error,
+    addTask,
+    modifyTask,
+    removeTask,
+  } = useTasks();
 
-  // Charger les tâches au démarrage
-  useEffect(() => {
-    loadTasks();
-  }, []);
-
-  async function loadTasks() {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await getTasks();
-      setTasks(data);
-    } catch (err) {
-      setError('Impossible de charger les tâches. Vérifiez que json-server est lancé.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  // Ajouter une tâche
-  async function handleAddTask(newTask) {
-    try {
-      const createdTask = await createTask(newTask);
-      setTasks((prev) => [...prev, createdTask]);
-    } catch (err) {
-      alert('Erreur lors de la création de la tâche');
-      console.error(err);
-    }
-  }
-
-  // Mettre à jour une tâche
-  async function handleUpdateTask(updatedTask) {
-    try {
-      const updated = await updateTask(updatedTask.id, updatedTask);
-      setTasks((prev) =>
-        prev.map((task) => (task.id === updated.id ? updated : task))
-      );
-    } catch (err) {
-      alert('Erreur lors de la mise à jour de la tâche');
-      console.error(err);
-    }
-  }
-
-  // Supprimer une tâche
-  async function handleDeleteTask(taskId) {
-    try {
-      await deleteTask(taskId);
-      setTasks((prev) => prev.filter((task) => task.id !== taskId));
-    } catch (err) {
-      alert('Erreur lors de la suppression de la tâche');
-      console.error(err);
-    }
-  }
-
+  // Écran de chargement
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-        <CircularProgress />
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          minHeight: '100vh',
+          flexDirection: 'column',
+          gap: 2
+        }}
+      >
+        <CircularProgress size={60} />
+        <Typography variant="body1" color="text.secondary">
+          Chargement des tâches...
+        </Typography>
       </Box>
     );
   }
 
+  // Écran d'erreur
   if (error) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', flexDirection: 'column', gap: 2 }}>
-        <p style={{ color: 'red' }}>{error}</p>
-        <p>Lancez json-server avec : <code>npm run server</code></p>
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          minHeight: '100vh', 
+          flexDirection: 'column', 
+          gap: 2,
+          p: 3,
+          textAlign: 'center'
+        }}
+      >
+        <Typography variant="h5" color="error" gutterBottom>
+          ⚠️ Erreur de connexion
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          {error}
+        </Typography>
+        <Box 
+          sx={{ 
+            mt: 2, 
+            p: 2, 
+            backgroundColor: '#f5f5f5', 
+            borderRadius: 1,
+            fontFamily: 'monospace'
+          }}
+        >
+          <Typography variant="body2">
+            💡 Lancez json-server avec : <strong>npm run server</strong>
+          </Typography>
+        </Box>
       </Box>
     );
   }
@@ -96,8 +90,8 @@ export default function App() {
               <BoardPage 
                 tasks={tasks}
                 columns={columns}
-                onUpdateTask={handleUpdateTask}
-                onDeleteTask={handleDeleteTask}
+                onUpdateTask={modifyTask}
+                onDeleteTask={removeTask}
               />
             } 
           />
@@ -106,7 +100,7 @@ export default function App() {
             element={
               <TaskDetailPage 
                 tasks={tasks}
-                onDelete={handleDeleteTask}
+                onDelete={removeTask}
               />
             } 
           />
@@ -116,7 +110,7 @@ export default function App() {
               <TaskEditPage 
                 tasks={tasks}
                 columns={columns}
-                onUpdate={handleUpdateTask}
+                onUpdate={modifyTask}
               />
             } 
           />
@@ -125,7 +119,7 @@ export default function App() {
             element={
               <TaskNewPage 
                 columns={columns}
-                onAdd={handleAddTask}
+                onAdd={addTask}
               />
             } 
           />
