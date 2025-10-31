@@ -1,0 +1,32 @@
+{
+  "tasks": [
+    {
+      "id": "1",
+      "titre": "Configurer le projet",
+      "description": "Initialiser le projet React avec Vite et Material UI",
+      "statut": "Terminé",
+      "dateCreation": "20/01/2025"
+    },
+    {
+      "id": "2",
+      "titre": "Créer les composants",
+      "description": "Développer les composants Kanban, TaskCard, etc.",
+      "statut": "Terminé",
+      "dateCreation": "21/01/2025"
+    },
+    {
+      "id": "4",
+      "titre": "Ajouter le drag & drop",
+      "description": "Implémenter le déplacement des cartes par glisser-déposer\nImplémenter le déplacement des cartes par glisser-déposer",
+      "statut": "À faire",
+      "dateCreation": "22/01/2025"
+    },
+    {
+      "id": "6310",
+      "titre": "titre",
+      "description": "Communication avec un serveur\n• Les tâches doivent être persistées via une API REST (ou un faux backend\ntype json-server).\n• Appels API nécessaires :\no GET /tasks → liste des tâches\no POST /tasks → création\no PUT /tasks/:id → modification\no DELETE /tasks/:id → suppression",
+      "statut": "En cours",
+      "dateCreation": "31/10/2025"
+    }
+  ]
+}

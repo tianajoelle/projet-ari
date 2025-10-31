@@ -15,7 +15,7 @@ export default function TaskEditPage({ tasks, columns, onUpdate }) {
   const { id } = useParams();
   const navigate = useNavigate();
   
-  const task = tasks.find(t => t.id === parseInt(id));
+  const task = tasks.find(t => t.id == id);
 
   const [formData, setFormData] = useState({
     titre: '',

@@ -15,7 +15,9 @@ export default function TaskDetailPage({ tasks, onDelete }) {
   const { id } = useParams();
   const navigate = useNavigate();
   
-  const task = tasks.find(t => t.id === parseInt(id));
+  const taskId = id;
+  const task = tasks.find(t => t.id == taskId);
+
 
   if (!task) {
     return (
@@ -48,7 +50,7 @@ export default function TaskDetailPage({ tasks, onDelete }) {
         onClick={() => navigate('/')}
         sx={{ mb: 2 }}
       >
-        Retour au Board
+        Retour au tableau
       </Button>
 
       <Paper sx={{ p: 4, maxWidth: 800, mx: 'auto' }}>
