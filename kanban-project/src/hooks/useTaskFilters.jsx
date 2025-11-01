@@ -7,7 +7,7 @@ export function useTaskFilters(tasks) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
 
-  // Filtrage des tâches avec useMemo pour optimiser les performances
+  // Filtrage des tâches avec useMemo pour optimiser les performances: chatGPT a aidé pour cette partie
   const filteredTasks = useMemo(() => {
     return tasks.filter((task) => {
       const matchesSearch =

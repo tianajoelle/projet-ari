@@ -1,16 +1,76 @@
-# React + Vite
+# Application Kanban - Projet ARI1 2025
+Application de gestion de tâches avec un tableau Kanban, développée en React.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Description
+C'est un tableau Kanban qui permet de gérer ses tâches visuellement. Les tâches sont organisées en 3 colonnes :
 
-Currently, two official plugins are available:
+À faire : Les nouvelles tâches
+En cours : Ce sur quoi je travaille actuellement
+Terminé : Les tâches finies
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Le projet utilise React pour le frontend et json-server pour simuler une API backend.
+# Technologies
 
-## React Compiler
+React - Pour l'interface
+Material UI - Pour le design
+React Router - Pour la navigation entre les pages
+json-server - Pour simuler une API REST (port 3001)
+Vite - Pour le développement rapide (port 5173)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+# Installation
+Pré-requis: NodeJS
+Télécharger le projet
 
-## Expanding the ESLint configuration
+``git clone https://gitlab.univ-lille.fr/tiana.andrianirinarijaona.etu/ari1_2025_andrianirinarijaona_joelle_projet.git
+cd kanban-project``
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Installer les dépendances
+``npm install``
+
+Lancer l'application
+1. Le serveur (backend) dans un terminal :
+``npm run server``
+2. L'application React (frontend) dans un autre terminal :
+``npm run dev``
+
+Ensuite, ouvrir le navigateur sur : http://localhost:5173
+
+# Fonctionnalités
+Interface
+
+- Tableau Kanban avec 3 colonnes
+- Design avec Material UI
+- Navigation entre les pages
+
+Gestion des tâches
+
+- Créer une tâche (titre, description, statut)
+-  Voir les détails d'une tâche
+-  Modifier une tâche
+-  Supprimer une tâche
+-  Changer le statut d'une tâche
+-  Date de création automatique
+
+Recherche et filtres
+
+- Rechercher une tâche par son titre ou description
+- Filtrer par statut (Tous, À faire, En cours, Terminé)
+-  Compteur de tâches
+
+API REST
+
+- GET /tasks → Récupérer toutes les tâches
+- POST /tasks → Créer une tâche
+-  PUT /tasks/:id → Modifier une tâche
+-  DELETE /tasks/:id → Supprimer une tâche
+-  Les données sont sauvegardées automatiquement
+
+Navigation (React Router)
+
+-  / → Page principale (tableau Kanban)
+-  /new → Créer une nouvelle tâche
+-  /task/:id → Voir les détails d'une tâche
+- /edit/:id → Modifier une tâche
+
+# La "base de données"
+Les tâches sont sauvegardées dans le fichier db.json. Quand on modifie une tâche dans l'application, le fichier se met à jour automatiquement !

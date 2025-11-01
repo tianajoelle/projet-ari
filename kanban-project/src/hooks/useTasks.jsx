@@ -22,7 +22,7 @@ export function useTasks() {
       const data = await getTasks();
       setTasks(data);
     } catch (err) {
-      setError('Impossible de charger les tâches. Vérifiez que json-server est lancé.');
+      setError('Impossible de charger les tâches.');
       console.error(err);
     } finally {
       setLoading(false);

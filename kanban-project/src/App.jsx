@@ -58,24 +58,11 @@ export default function App() {
         }}
       >
         <Typography variant="h5" color="error" gutterBottom>
-          ⚠️ Erreur de connexion
+          Erreur de connexion
         </Typography>
         <Typography variant="body1" color="text.secondary">
           {error}
         </Typography>
-        <Box 
-          sx={{ 
-            mt: 2, 
-            p: 2, 
-            backgroundColor: '#f5f5f5', 
-            borderRadius: 1,
-            fontFamily: 'monospace'
-          }}
-        >
-          <Typography variant="body2">
-            💡 Lancez json-server avec : <strong>npm run server</strong>
-          </Typography>
-        </Box>
       </Box>
     );
   }
