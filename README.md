@@ -29,9 +29,10 @@ Pré-requis: NodeJS
 Télécharger le projet
 
 
-``` git clone https://gitlab.univ-lille.fr/tiana.andrianirinarijaona.etu/ari1_2025_andrianirinarijaona_joelle_projet.git
-
-cd kanban-project ```
+```bash
+git clone https://gitlab.univ-lille.fr/tiana.andrianirinarijaona.etu/ari1_2025_andrianirinarijaona_joelle_projet.git
+cd kanban-project
+```
 
 Installer les dépendances
 
