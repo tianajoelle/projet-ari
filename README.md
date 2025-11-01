@@ -5,32 +5,46 @@ Application de gestion de tâches avec un tableau Kanban, développée en React.
 C'est un tableau Kanban qui permet de gérer ses tâches visuellement. Les tâches sont organisées en 3 colonnes :
 
 À faire : Les nouvelles tâches
+
 En cours : Ce sur quoi je travaille actuellement
+
 Terminé : Les tâches finies
 
 Le projet utilise React pour le frontend et json-server pour simuler une API backend.
 # Technologies
 
 React - Pour l'interface
+
 Material UI - Pour le design
+
 React Router - Pour la navigation entre les pages
+
 json-server - Pour simuler une API REST (port 3001)
+
 Vite - Pour le développement rapide (port 5173)
 
 # Installation
 Pré-requis: NodeJS
+
 Télécharger le projet
 
-```git clone https://gitlab.univ-lille.fr/tiana.andrianirinarijaona.etu/ari1_2025_andrianirinarijaona_joelle_projet.git
-cd kanban-project```
+
+``` git clone https://gitlab.univ-lille.fr/tiana.andrianirinarijaona.etu/ari1_2025_andrianirinarijaona_joelle_projet.git
+
+cd kanban-project ```
 
 Installer les dépendances
+
 ```npm install```
 
 Lancer l'application
+
 1. Le serveur (backend) dans un terminal :
+
 ```npm run server```
+
 2. L'application React (frontend) dans un autre terminal :
+
 ```npm run dev```
 
 Ensuite, ouvrir le navigateur sur : http://localhost:5173
